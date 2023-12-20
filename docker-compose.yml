@@ -1,0 +1,26 @@
+version: '3'
+services:
+  webapp:
+    image: eligaal/webapp:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGO_URL=mongodb://database:27017/mydb
+    depends_on:
+      - database
+
+  database:
+    image: mongo:4.4.6
+    volumes:
+      - mongodb-data:/data/db
+
+  test:
+    image: eligaal/webapp:latest
+    environment:
+      - API_URL=http://webapp:3000
+    depends_on:
+      - webapp
+    command: yarn test
+
+volumes:
+  mongodb-data:
